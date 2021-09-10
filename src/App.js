@@ -1,25 +1,55 @@
-import logo from './logo.svg';
-import './App.css';
+import { render } from "@testing-library/react";
+import React, { Component } from "react";
+import "./App.css";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  constructor(props) {
+    super(props);
+    const date = new Date();
+    this.state = {
+      seconds: date.getSeconds(),
+      minutes: date.getMinutes(),
+      hours: date.getHours(),
+    };
+  }
+
+  tick = () => {
+    const date = new Date();
+    this.setState({
+      seconds: date.getSeconds(),
+      minutes: date.getMinutes(),
+      hours: date.getHours(),
+    });
+  };
+
+  componentDidMount() {
+    this.timerID = setInterval(() => this.tick(), 1000);
+  }
+
+  componentDidUpdate() {
+    console.log(
+      "CLASS component Did update - выводится при каждом обновлении"
+    );
+    //console.log( this.state);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timerID);
+  }
+  render() {
+    const{seconds,minutes,hours}=this.state;
+    const s=seconds*6;
+    const m=minutes*6 +6*seconds / 60;
+    const h=hours% 12*30 +6*minutes / 60;
+
+
+    return (
+      <div className="clock">
+        <div className="clock_seconds" style={{transform: 'rotate('+s+'deg)'}} > </div>
+        <div className="clock_minutes" style={{transform: 'rotate('+m+'deg)'}} > </div>
+        <div className="clock_hours" style={{transform: 'rotate('+h+'deg)'}} > </div>
+      </div>
+    );
+  }
 }
-
 export default App;
